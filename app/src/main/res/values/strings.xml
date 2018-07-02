@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">myCustody</string>
+    <string name="stringScanQRCodeTripSheet">SCAN QR CODE - TRIP SHEET</string>
+    <string name="footerHome">Nawakara Arta Kencana @ 2018</string>
+</resources>
