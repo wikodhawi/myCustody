@@ -2,12 +2,15 @@ package com.mycustody.Adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mycustody.Model.TripSchedule.TripSchedule;
 import com.mycustody.R;
 
 import java.util.HashMap;
@@ -15,10 +18,10 @@ import java.util.List;
 
 public class TripScheduleAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private List<String> listDataHeader;
-    private HashMap<String, List<String>> listHashMap;
+    private List<TripSchedule> listDataHeader;
+    private HashMap<TripSchedule, List<String>> listHashMap;
 
-    public TripScheduleAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap) {
+    public TripScheduleAdapter(Context context, List<TripSchedule> listDataHeader, HashMap<TripSchedule, List<String>> listHashMap) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listHashMap = listHashMap;
@@ -35,7 +38,7 @@ public class TripScheduleAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getGroup(int i) {
+    public TripSchedule getGroup(int i) {
         return listDataHeader.get(i);
     }
 
@@ -61,14 +64,38 @@ public class TripScheduleAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        String headerTitle = (String) getGroup(i);
+        TripSchedule headerTitle = (TripSchedule) getGroup(i);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_trip_schedule, null);
         }
-        TextView lblListHeader = (TextView) view.findViewById(R.id.lblListHeader);
-        lblListHeader.setTypeface(null, Typeface.BOLD);
-        lblListHeader.setText(headerTitle);
+        TextView lblPTTripSchedule = (TextView) view.findViewById(R.id.lblPTTripSchedule);
+        ImageView imgProgressTripSchedule=(ImageView)view.findViewById(R.id.imgProgressTripSchedule);
+        ImageView imgLogoTripSchedule=(ImageView)view.findViewById(R.id.imgLogoTripSchedule);
+
+        lblPTTripSchedule.setTypeface(null, Typeface.BOLD);
+        lblPTTripSchedule.setText(headerTitle.getJobTrip());
+        if(headerTitle.getProgressTrip().matches("checkIn"))
+        {
+            imgProgressTripSchedule.setImageDrawable(context.getDrawable(R.mipmap.ic_check_in));
+        }
+        else if(headerTitle.getProgressTrip().matches("checkOut"))
+        {
+            imgProgressTripSchedule.setImageDrawable(context.getDrawable(R.mipmap.ic_check_out));
+        }
+        else if(headerTitle.getProgressTrip().matches("history"))
+        {
+            imgProgressTripSchedule.setImageDrawable(context.getDrawable(R.mipmap.ic_history));
+        }
+
+        if(headerTitle.getLogoTrip().matches("nawakara"))
+        {
+            imgLogoTripSchedule.setImageDrawable(context.getDrawable(R.mipmap.ic_nawakara_bw));
+        }
+        else if(headerTitle.getLogoTrip().matches("pu"))
+        {
+            imgLogoTripSchedule.setImageDrawable(context.getDrawable(R.mipmap.ic_pu));
+        }
         return view;
     }
 

@@ -3,19 +3,25 @@ package com.mycustody.Activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mycustody.R;
+import com.mycustody.Util.SessionManagementUtil;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 
-public class ScanQRCodeTrip extends AppCompatActivity implements ZBarScannerView.ResultHandler{
+public class ScanQRCodeTripActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler{
 
     private ZBarScannerView mScannerView;
 
@@ -23,6 +29,7 @@ public class ScanQRCodeTrip extends AppCompatActivity implements ZBarScannerView
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final int MY_READ_EXTERNAL_STORAGE=102;
     private static final int MY_WRITE_EXTERNAL_STORAGE=103;
+    SessionManagementUtil session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +37,18 @@ public class ScanQRCodeTrip extends AppCompatActivity implements ZBarScannerView
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.stringScanQRCodeTripSheet));
         checkPermission();
+        session = new SessionManagementUtil(getApplicationContext());
+
+        if (session.isLoggedIn()){
+            startActivity(new Intent(ScanQRCodeTripActivity.this, HomeActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
+        }
 
         mScannerView = new ZBarScannerView(this);    // Programmatically initialize the scanner view
-        setContentView(mScannerView);
 
+        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.contentPanel);
+        contentFrame.addView(mScannerView);
 
     }
 
@@ -101,6 +116,7 @@ public class ScanQRCodeTrip extends AppCompatActivity implements ZBarScannerView
     @Override
     public void onResume() {
         super.onResume();
+//        mScannerView = new ZBarScannerView(this);    // Programmatically initialize the scanner view
         mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
         mScannerView.startCamera();          // Start camera on resume
 
@@ -109,6 +125,8 @@ public class ScanQRCodeTrip extends AppCompatActivity implements ZBarScannerView
     @Override
     public void onPause() {
         super.onPause();
+
+//        mScannerView = new ZBarScannerView(this);    // Programmatically initialize the scanner view
         mScannerView.stopCamera();           // Stop camera on pause
 
     }
@@ -121,7 +139,9 @@ public class ScanQRCodeTrip extends AppCompatActivity implements ZBarScannerView
 
         // If you would like to resume scanning, call this method below:
         mScannerView.resumeCameraPreview(this);
-        Intent intent=new Intent(ScanQRCodeTrip.this, HomeActivity.class);
+        session.createLoginSession(result.getContents());
+        Intent intent=new Intent(ScanQRCodeTripActivity.this, HomeActivity.class);
+
         intent.putExtra("qrCodeResult", result.getContents());
         intent.putExtra("qrCodeType", result.getBarcodeFormat().getName());
         startActivity(intent);

@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.ScanQRCodeTrip" />
+        <activity android:name=".Activity.ScanQRCodeTripActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".Activity.SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -32,7 +33,10 @@
         <activity
             android:name=".Activity.HomeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".Activity.TripScheduleActivity"
+        <activity
+            android:name=".Activity.TripScheduleActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".Activity.AboutUsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             ></activity>
     </application>
